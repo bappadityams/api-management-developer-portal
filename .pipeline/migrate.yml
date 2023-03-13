@@ -4,7 +4,7 @@ trigger: none
 
 variables:
   - name: poolName
-    value: windows-latest
+    value: ubuntu-latest
 
 jobs:
 
