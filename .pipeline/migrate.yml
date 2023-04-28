@@ -6,6 +6,26 @@ variables:
   - name: poolName
     value: ubuntu-latest
 
+    ServiceConnection: dev-sc
+    BuildAgent: ubuntu-latest
+    workingDirectory: $(System.DefaultWorkingDirectory)/scripts.v3
+    sourceSubscriptionId: $(dev-subscriptionid)
+    sourceResourceGroupName: $(AWD-APIM-RG)
+    sourceServiceName: $(AWD-APIM-01)
+    sourceAzureTenantId: $(devops-tf01-spn-tenantid)
+    sourceServicePrincipal: $(devops-tf01-spn-clientid)
+    sourceServicePrincipalSecret: $(devops-tf01-spn-secret)
+    existingEnvUrls: $(https://dev-apim-developer.g1net.com)
+ 
+
+    destServiceName: $(AES-APIM-v01)
+    destSubscriptionId: $(dev-subscriptionid)
+    destResourceGroupName: $(AES-APIM-RG)
+    destAzureTenantId: $(devops-tf01-spn-tenantid)
+    destServicePrincipal: $(devops-tf01-spn-clientid)
+    destServicePrincipalSecret: $(devops-tf01-spn-secret)
+    destEnvUrls: $(https://stg-apim-developer.g1net.com)
+
 jobs:
 
   # All tasks on APIM Developer portal pipeline
