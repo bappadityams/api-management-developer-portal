@@ -1,0 +1,23 @@
+name: CD-ApiMDeveloperPortal-Capture-Pipeline
+
+trigger: none
+
+pool:
+  vmImage: 'windows-latest' 
+
+variables:
+  SourceSubscriptionID: ''
+  SourceResourceGroupName: ''
+  SourceAPIMServiceName: ''
+  ExtractFolderPath: 'E:\DPM_Extract'
+ 
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Azure CLI : Capture Task'
+  inputs:
+    azureSubscription: ''
+    scriptType: batch
+    scriptLocation: inlineScript
+    inlineScript: 'node ./capture --subscriptionId  $(SourceSubscriptionID) --resourceGroupName  $(SourceResourceGroupName) --serviceName  $(SourceAPIMServiceName)'
+    workingDirectory: '$(ExtractFolderPath)/scripts.v3'

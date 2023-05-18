@@ -1,0 +1,34 @@
+name: CD-ApiMDeveloperPortal-Import-Pipeline
+
+trigger: none
+
+pool:
+  vmImage: 'windows-latest' 
+
+variables:
+  DestinationSubscriptionID: ''
+  DestinationResourceGroupName: ''
+  DestinationAPIMServiceName: ''
+  IsPublish: 'true'
+  ExtractFolderPath: 'E:\DPM_Extract'
+ 
+
+steps:
+- task: AzureCLI@2
+  displayName: 'Azure CLI : Clean Up Task'
+  inputs:
+    azureSubscription: ''
+    scriptType: batch
+    scriptLocation: inlineScript
+    inlineScript: 'node ./cleanup --subscriptionId  $(DestinationSubscriptionID) --resourceGroupName  $(DestinationResourceGroupName) --serviceName  $(DestinationAPIMServiceName)'
+    workingDirectory: '$(ExtractFolderPath)/scripts.v3'
+
+    
+- task: AzureCLI@2
+  displayName: 'Azure CLI : Migrate Task'
+  inputs:
+    azureSubscription: ''
+    scriptType: batch
+    scriptLocation: inlineScript
+    inlineScript: 'node ./generate --subscriptionId $(DestinationSubscriptionID) --resourceGroupName $(DestinationResourceGroupName) --serviceName $(DestinationAPIMServiceName) --publish $(IsPublish)'
+    workingDirectory: '$(ExtractFolderPath)/scripts.v3'
