@@ -1,0 +1,35 @@
+trigger: none
+
+
+
+stages:
+  - stage: push_changes_to_Dev_APIM
+    displayName: Push changes to Dev APIM
+    jobs:
+      - job: push_changes_to_Dev_APIM
+        displayName: Push changes to Dev APIM
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - template: import.yaml
+            parameters:
+              API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ parameters.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
+              RESOURCE_GROUP_NAME : $(RESOURCE_GROUP_NAME)
+              API_MANAGEMENT_SERVICE_NAME : $(APIM_NAME)
+              ENVIRONMENT: "Dev"
+  - stage: push_changes_to_Prod_APIM
+    displayName: Push changes to Prod APIM
+    jobs:
+      - job: push_changes_to_Prod_APIM
+        displayName: Push changes to Prod APIM
+        pool:
+          vmImage: ubuntu-latest
+        environment: 'Prod'  
+        steps:
+          - template: import.yaml
+            parameters:
+              API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH: ${{ parameters.API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH }}
+              RESOURCE_GROUP_NAME : $(RESOURCE_GROUP_NAME)
+              API_MANAGEMENT_SERVICE_NAME : $(APIM_NAME)
+              ENVIRONMENT: "Prod"       
+

@@ -1,9 +1,25 @@
-name: CD-ApiMDeveloperPortal-Import-Pipeline
+parameters:
+  - name: API_MANAGEMENT_SERVICE_OUTPUT_FOLDER_PATH
+    type: string
+    displayName: Folder where the artifacts reside
+  - name: ENVIRONMENT
+    type: string
+    displayName: Environment to display
+  - name: SUBSCRIPTION_ID
+    type: string
+    displayName: Resource Group Name
+  - name: SUBSCRIPTION_ID
+    type: string
+    displayName: Resource Group Name
+  - name: API_MANAGEMENT_SERVICE_NAME
+    type: string
+    displayName: APIM Instance Name
+    default: ""
+  - name: CONFIGURATION_YAML_PATH
+    type: string
+    displayName: Optional configuration file
+    default: ""
 
-trigger: none
-
-pool:
-  vmImage: 'windows-latest' 
 
 variables:
   DestinationSubscriptionID: ''
@@ -14,21 +30,21 @@ variables:
  
 
 steps:
-- task: AzureCLI@2
-  displayName: 'Azure CLI : Clean Up Task'
-  inputs:
-    azureSubscription: ''
-    scriptType: batch
-    scriptLocation: inlineScript
-    inlineScript: 'node ./cleanup --subscriptionId  $(DestinationSubscriptionID) --resourceGroupName  $(DestinationResourceGroupName) --serviceName  $(DestinationAPIMServiceName)'
-    workingDirectory: '$(ExtractFolderPath)/scripts.v3'
+  - task: AzureCLI@2
+    displayName: 'Azure CLI : Clean Up Task'
+    inputs:
+      azureSubscription: ''
+      scriptType: batch
+      scriptLocation: inlineScript
+      inlineScript: 'node ./cleanup --subscriptionId  ${{parameters.SUBSCRIPTION_ID}} --resourceGroupName  ${{parameters.RESOURCE_GROUP_NAME}} --serviceName  ${{parameters.API_MANAGEMENT_SERVICE_NAME}}'
+      workingDirectory: '$(ExtractFolderPath)/scripts.v3'
 
-    
-- task: AzureCLI@2
-  displayName: 'Azure CLI : Migrate Task'
-  inputs:
-    azureSubscription: ''
-    scriptType: batch
-    scriptLocation: inlineScript
-    inlineScript: 'node ./generate --subscriptionId $(DestinationSubscriptionID) --resourceGroupName $(DestinationResourceGroupName) --serviceName $(DestinationAPIMServiceName) --publish $(IsPublish)'
-    workingDirectory: '$(ExtractFolderPath)/scripts.v3'
+      
+  - task: AzureCLI@2
+    displayName: 'Azure CLI : Migrate Task'
+    inputs:
+      azureSubscription: ''
+      scriptType: batch
+      scriptLocation: inlineScript
+      inlineScript: 'node ./generate --subscriptionId  ${{parameters.SUBSCRIPTION_ID}} --resourceGroupName  ${{parameters.RESOURCE_GROUP_NAME}} --serviceName  ${{parameters.API_MANAGEMENT_SERVICE_NAME}}'
+      workingDirectory: '$(ExtractFolderPath)/scripts.v3'
